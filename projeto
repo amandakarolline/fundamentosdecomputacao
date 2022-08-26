@@ -1,0 +1,219 @@
+from time import sleep
+
+
+# função imprime uma linha de traços
+def linha(tam=42):
+    return '-' * tam
+
+
+# função que imprime um cabeçalho
+def cabecalho(txt):
+    print(linha())
+    for texto in txt:
+        print(texto.center(42))
+    print(linha())
+
+
+# função que imprime o menu a partir de uma lista
+def menu(lista):
+    cabecalho(['MENU'])
+    c = 1
+    for item in lista:
+        print(f'\033[1;32m{c} - {item}\033[m')
+        c += 1
+    print(linha())
+    opc = leia_int('Digite o número da opção desejada: ')
+    return opc
+
+
+# função que força o usuário a digitar um número inteiro
+def leia_int(msg):
+    while True:
+        try:
+            x = int(input(msg))
+        except (ValueError, TypeError):
+            print("\033[1;31mERRO: digite um número inteiro válido.\033[m")
+            continue
+        else:
+            return x
+
+
+# função que força o usuário a digitar um número real
+def leia_float(msg):
+    while True:
+        try:
+            x = float(input(msg))
+        except (ValueError, TypeError):
+            print("\033[1;31mERRO: digite um número inteiro válido.\033[m")
+            continue
+        else:
+            return x
+
+
+# função que informa que a opção não existe.
+def opcao_invalida():
+    print('\033[1;31mOpção inválida\033[m')
+
+
+# função que cadastra os produtos e preço em um dicionário
+def cadastro(a, b):
+    itens_cadastrados.update({a: b})
+    print("\033[1;32mProduto cadastrado com sucesso!\033[m")
+
+
+# função que altera o preço do produto
+def alterar(a, b):
+    itens_cadastrados[a] = b
+    print("\033[1;32mPreço alterado!\033[m")
+
+
+# função que exclui um produto cadastrado
+def excluir(a):
+    itens_cadastrados.pop(a)
+    print("\033[1;32mProduto excluído!\033[m")
+
+
+# função que imprime todos os produtos do cardápio
+def imprimir_cardapio():
+    for a, b in itens_cadastrados.items():
+        print(f'{a} : R$ {b}')
+    sleep(1)
+
+
+# função que inclui os produtos pedidos em uma lista
+def pedidos(a):
+    pedido.append(a)
+
+
+# função que imprime todos os produtos pedidos
+def imprimir_pedido():
+    for item in pedido:
+        print(item)
+    sleep(1)
+
+
+# imprime uma mensagem dizendo que o dicionário está vazio
+def vazio():
+    print('\033[1;31mAinda não existem itens cadastrados.\033[m')
+    sleep(1)
+
+
+# função que informa que o produto já foi cadastrado
+def repetido():
+    print("\033[1;31mItem já cadastrado\033[m")
+    sleep(1)
+
+
+# função que informa que o produto procurado não foi cadastrado.
+def inexistente():
+    print("\033[1;31mEste item não foi cadastrado\033[m")
+    sleep(1)
+
+
+x, y, z, soma = 0, 0, 0, 0
+itens_cadastrados = {}
+pedido = []
+
+cabecalho(['\033[1;32mProjeto Fun\033[mdamentos de\033[1;31m Computação\033[m',
+           '\033[1;32mUniversidad\033[me Federal d\033[1;31mo Maranhão\033[m',
+           '\033[1;32mAmanda Karo\033[mlline Barbo\033[1;31msa Sousa\033[m',
+           '\033[1;32mJeysraelly\033[m Almone da S\033[1;31milva\033[m',
+           'Versão 1.0b'])
+cabecalho(['Bem-vindo à Pyzzaria while True: Coma'])
+
+while True:
+    x = menu(['Ajustar cadastro de produtos do dia', 'Atender um cliente', 'Sair'])
+
+    if x == 1:
+        while True:
+            y = menu(['Cadastrar produtos e preços', 'Alterar valor do produto', 'Excluir produto',
+                      'Exibir todos os produtos cadastrados', 'Voltar ao menu anterior'])
+
+            if y == 1:
+                a = input("Digite o nome do item: ")
+                a = a.upper()
+                if a in itens_cadastrados:
+                    repetido()
+                else:
+                    b = leia_float("Digite o valor: ")
+                    cadastro(a, b)
+
+            elif y == 2:
+                if not itens_cadastrados:
+                    vazio()
+                else:
+                    a = input("Digite o nome do item a ser alterado: ")
+                    a = a.upper()
+                    if a in itens_cadastrados:
+                        b = leia_float("Digite o novo valor: ")
+                        alterar(a, b)
+                    else:
+                        inexistente()
+
+            elif y == 3:
+                if not itens_cadastrados:
+                    vazio()
+                else:
+                    a = input("Digite o nome do item que deseja excluir: ")
+                    a = a.upper()
+                    if a in itens_cadastrados:
+                        excluir(a)
+                    else:
+                        inexistente()
+
+            elif y == 4:
+                if not itens_cadastrados:
+                    vazio()
+                else:
+                    imprimir_cardapio()
+
+            elif y == 5:
+                break
+
+            else:
+                opcao_invalida()
+
+    elif x == 2:
+        while True:
+            z = menu(['Exibir todos os produtos cadastrados', 'Fazer pedido',
+                      'Ver todos os pedidos', 'Fechar a conta', 'Voltar ao menu anterior'])
+
+            if z == 1:
+                if not itens_cadastrados:
+                    vazio()
+                else:
+                    imprimir_cardapio()
+
+            elif z == 2:
+                a = input('Digite o item do pedido: ')
+                a = a.upper()
+                # Verifica se produto está no cardápio
+                if a in itens_cadastrados:
+                    pedidos(a)
+                else:
+                    inexistente()
+
+            elif z == 3:
+                if not pedido:
+                    vazio()
+                else:
+                    imprimir_pedido()
+
+            elif z == 4:
+                for item in pedido:
+                    for chave, valor in itens_cadastrados.items():
+                        if item == chave:
+                            soma += valor
+                print(f'O valor total a pagar é de R$ {soma}')
+
+            elif z == 5:
+                break
+
+            else:
+                opcao_invalida()
+
+    elif x == 3:
+        break
+
+    else:
+        opcao_invalida()
